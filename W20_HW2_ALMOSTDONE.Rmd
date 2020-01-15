@@ -1,0 +1,108 @@
+---
+title: "Homework 2"
+author: "Mary Kate Campbell"
+date: "01/15/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = "~/Documents/UMBio201/Lab2/")
+```
+
+```{r Load packages, message=FALSE, warning=FALSE, include=FALSE, results='hide'}
+library(tidyverse)
+library(readxl)
+library(broom)
+library(cowplot)
+set.seed(7)
+```
+
+# Question 1
+Import the Lab2 data file, name the resulting data frame hw2_df. What are the dimensions (number of rows and columns) of this data frame?
+```{r}
+hw2_df <- read_delim(file = "raw_data/Lab2_data.txt", 
+                        delim = "\t", escape_double = FALSE, trim_ws = TRUE, na=c("NA"),
+                        col_types = list())
+
+hw2_df
+dim(hw2_df) #dimensions of this data frame are 4422 rows and 16 columns
+```
+
+
+# Question 2 #KEEP WORKING ON THIS 
+Filter the hw2_df data frame for data from Fall 2018, only include study weeks 1 and 3, subset for BRMPS, drop any data from students that did not consume the full quantity of the supplement, or samples that are not within the weight range (0.1 - 1.0 grams). Keep columns with participant & sample data, and butyrate measurements. Hint: use the accessor functions to identify column and variable names. Name the resulting data frame hw2_f18. 
+```{r}
+hw2_f18 <- hw2_df %>% 
+  filter(semester == "Fall2018") %>% 
+  filter(study_week == "week1" | study_week == "week3") %>% 
+  filter(supplement_consumed == "BRMPS") %>% 
+  filter(sample_weight_g > 0.1 & sample_weight_g < 1.0) %>% 
+  select(-sample_weight_g,-acetate_mM,-propionate_mM)
+```
+
+Repeat the filtering and subsetting above for students from Winter 2019. Name the resulting data frame hw2_w19. 
+```{r}
+hw2_w19 <- hw2_df %>% 
+  filter(semester == "Winter2019") %>% 
+  filter(study_week == "week1" | study_week == "week3") %>% 
+  filter(supplement_consumed == "BRMPS") %>% 
+  filter(sample_weight_g > 0.1 & sample_weight_g < 1.0) %>% 
+  select(-sample_weight_g,-acetate_mM,-propionate_mM)
+```
+
+Which semester contains more individual students?
+```{r}
+n_distinct(hw2_w19$participant_id)
+n_distinct(hw2_f18$participant_id)
+unique(hw2_f18$participant_id) #double check
+#Winter 2019 contains more individual students (58 students) than Fall 2018 (35 students)
+```
+
+
+# Question 3
+Import the question3_data file, complete the following as one long series of commands using pipes: 
+
+* Convert measurements from US Customary to metric units (1 kg = 2.205 pounds, 1 m = 35.274 inches)
+* Round participant height and weight to 0 decimal positions
+* Subset for samples within the weight limits (0.1 - 1.0 grams)
+* Round SCFA concentrations to 2 decimal positions
+* Exclude samples that were not frozen within 24 hours
+* Drop any intermediate columns used for calculations 
+
+Name the resulting data frame hw2_q3. What are the dimensions of the resulting data frame? 
+```{r}
+hw2_q3 <- read_delim(file = "raw_data/question2_data.txt", 
+                        delim = "\t", escape_double = FALSE, trim_ws = TRUE, na=c("NA"),
+                        col_types = list())
+```
+
+
+# Question 4
+
+Using the hw2_q3 data frame; apply the group_by() and summarise() functions to determine the mean concentration (in mmol/kg) of each of the three SCFAs (acetate, butyrate, propionate) for each participant, during each week of the study. Use the mutate() function to calculate the total SCFA concentration for each participant, during each week of the study. Drop any intermediate columns used for calculations. Name the resulting data frame hw2_q4. What are the dimensions of the resulting data frame?
+```{r}
+
+```
+
+
+# Question 5
+
+Export/save the data frame created in Question 4. Processed/curated data frames should be uploaded to 'curated_data' directory on your GitHub Page.
+```{r}
+
+```
+
+# Question 6
+Complete writing assignment assigned in lecture 1 in a Word Document. Submit file to HW2 assignment on Canvas. 
+
+
+# Extra credit
+
+Can you conduct the analyses in Questions 3, 4, 5 as one long series of pipes (from import to export, without creating any intermediate data frames)?
+```{r}
+
+```
+
+-----
+end
